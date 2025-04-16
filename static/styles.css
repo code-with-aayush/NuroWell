@@ -1,0 +1,114 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #b3a7ff, #d4bfff);
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  align-items: center; /* Vertically center the form within the container */
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1512px;
+  height: 982px;
+  position: relative;
+  margin-top: -50px;
+}
+
+.brain-image img {
+  width: 1512px;
+  height: 982px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.form-container {
+  background: white;
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+  margin-right: 150px; /* From previous adjustment to move the form left */
+  margin-top: -50px; /* Move the form 50px upward */
+}
+
+.logo img {
+  width: 61px;
+  height: 62px;
+  border-radius: 22px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  text-align: left;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  outline: none;
+  width: 100%;
+}
+
+input:focus {
+  border-color: #007bff;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  width: 100%;
+}
+
+button:hover {
+  background: #0056b3;
+}

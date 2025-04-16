@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neuro-Well Stress Level</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='stress-level-styles.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      /* Add these styles to make the chart larger */
+      .chart-container {
+        width: 800px; /* Adjust as needed */
+        height: 400px; /* Adjust as needed */
+        margin: 20px auto; /* Optional: Adds spacing */
+      }
+
+      #stressChart {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo">
+          <img
+            src="{{ url_for('static', filename='logo.jpg') }}"
+            alt="Neuro-Well Logo"
+          />
+          <span>NEURO-WELL</span>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="{{ url_for('next_page') }}">Analysis</a></li>
+            <li>
+              <a href="{{ url_for('psychological_test') }}"
+                >Psychological Test</a
+              >
+            </li>
+            <li class="active"><a href="#">Stress Level</a></li>
+            <li>
+              <a href="{{ url_for('mental_health_report') }}"
+                >Mental Health Report</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <h1>Your Stress Level based on Biosensors and Psychological Test</h1>
+        <div class="stress-card">
+          <h2>Stress Level: {{ stress_level }}</h2>
+          <p>
+            {% if stress_level == 1 %} Relaxed: You're feeling calm and at ease.
+            {% elif stress_level == 2 %} Low Stress: You're managing well, but
+            keep an eye on your habits. {% elif stress_level == 3 %} Medium
+            Stress: Consider incorporating stress-relief techniques. {% elif
+            stress_level == 4 %} High Stress: It might be time to take a break
+            and seek support. {% elif stress_level == 5 %} Very High Stress:
+            Immediate action is recommended to reduce stress. {% endif %}
+          </p>
+          <a
+            href="{{ url_for('mental_health_report') }}"
+            class="view-report-button"
+            >View Full Report</a
+          >
+        </div>
+
+        <!-- Stress Level Chart -->
+        <h2>Stress Level Over Time</h2>
+        <div class="chart-container">
+          <canvas id="stressChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let chart = null;
+
+      // Map stress levels to colors
+      const stressColors = {
+        1: "rgba(144, 238, 144, 0.6)", // Green (Relaxed)
+        2: "rgba(173, 216, 230, 0.6)", // Light Blue (Low Stress)
+        3: "rgba(255, 215, 0, 0.6)", // Yellow (Medium Stress)
+        4: "rgba(255, 69, 0, 0.6)", // Orange (High Stress)
+        5: "rgba(255, 0, 0, 0.6)", // Red (Very High Stress)
+      };
+
+      // Initialize Chart.js
+      const ctx = document.getElementById("stressChart").getContext("2d");
+      chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [], // Timestamps
+          datasets: [
+            {
+              label: "Stress Level (1-5)",
+              data: [], // Stress levels
+              borderColor: "#ff5733", // Default border color
+              backgroundColor: "rgba(255, 87, 51, 0.2)",
+              fill: true,
+              tension: 0.4,
+              pointRadius: 6, // Larger points for better visibility
+              pointBackgroundColor: "#ffffff", // White border around points
+              pointBorderColor: "#ff5733", // Border color for points
+              borderWidth: 2, // Thicker line
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false, // Allows dynamic resizing
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 0,
+              max: 5,
+              title: {
+                display: true,
+                text: "Stress Level (1-5)",
+                font: {
+                  size: 16,
+                },
+              },
+              ticks: {
+                stepSize: 1,
+                callback: function (value) {
+                  // Map numeric values to stress categories
+                  const stressCategories = [
+                    "",
+                    "Relaxed",
+                    "Low Stress",
+                    "Medium Stress",
+                    "High Stress",
+                    "Very High Stress",
+                  ];
+                  return stressCategories[value];
+                },
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Time",
+                font: {
+                  size: 16,
+                },
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              labels: {
+                font: {
+                  size: 14,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      /**
+       * Add the current stress level to the chart
+       */
+      function addStressLevelToChart(stressLevel) {
+        const currentTime = new Date().toLocaleTimeString(); // Get current time
+        chart.data.labels.push(currentTime); // Add timestamp to labels
+        chart.data.datasets[0].data.push(stressLevel); // Add stress level to data
+
+        // Update point and line colors based on stress level
+        chart.data.datasets[0].backgroundColor = stressColors[stressLevel];
+        chart.data.datasets[0].borderColor = stressColors[stressLevel];
+
+        // Limit the number of points displayed on the chart (optional)
+        if (chart.data.labels.length > 10) {
+          chart.data.labels.shift(); // Remove oldest timestamp
+          chart.data.datasets[0].data.shift(); // Remove oldest stress level
+        }
+
+        chart.update(); // Update the chart
+      }
+
+      // Get the current stress level from Flask template
+      const currentStressLevel = parseFloat("{{ stress_level }}");
+
+      // Add the current stress level to the chart
+      if (!isNaN(currentStressLevel)) {
+        addStressLevelToChart(currentStressLevel);
+      }
+    </script>
+  </body>
+</html>

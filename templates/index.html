@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neuro-Well</title>
+    <link rel="stylesheet" href="static\styles.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: flex-end; /* Align form to the right */
+        align-items: center;
+        background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Brain Background Image */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%; /* Cover the entire background */
+        height: 100%;
+        background: url("/static/brain-image.png") no-repeat center;
+        background-size: 1512px 982px; /* Exact dimensions of the brain image */
+        opacity: 1;
+        z-index: 0;
+      }
+
+      .form-container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+        z-index: 1;
+        margin-right: 50px; /* Add some margin from the right edge */
+      }
+
+      .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .logo img {
+        width: 61px; /* Exact width of the logo */
+        height: 62px; /* Exact height of the logo */
+        border-radius: 22px; /* Exact border radius */
+        margin-right: 10px;
+      }
+
+      .logo span {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      h1 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      h1::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 2px;
+        background: #ccc;
+      }
+
+      p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        text-align: left;
+      }
+
+      input {
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        outline: none;
+        transition: border-color 0.3s ease;
+      }
+
+      input:focus {
+        border-color: #007bff;
+      }
+
+      input::placeholder {
+        color: #aaa;
+      }
+
+      button {
+        padding: 12px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <div class="logo">
+        <img
+          src="{{ url_for('static', filename='logo.jpg') }}"
+          alt="Neuro-Well Logo"
+        />
+        <span>NEURO-WELL</span>
+      </div>
+      <h1>Welcome To Neuro-Well</h1>
+      <p>Enter your Name and Age below</p>
+      <form method="POST" action="{{ url_for('index') }}">
+        <label for="name">NAME</label>
+        <input type="text" id="name" name="name" placeholder="Name" required />
+        <label for="age">AGE</label>
+        <input type="number" id="age" name="age" placeholder="Age" required />
+        <button type="submit">Next</button>
+      </form>
+    </div>
+  </body>
+</html>

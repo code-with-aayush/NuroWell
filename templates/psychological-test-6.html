@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuro-Well Psychological Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='psychological-test-6-styles.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Neuro-Well Logo">
+                <span>NEURO-WELL</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('next_page') }}">Analysis</a></li>
+                    <li class="active"><a href="#">Psychological Test</a></li>
+                    <li><a href="{{ url_for('stress_level') }}">Stress Level</a></li>
+                    <li><a href="{{ url_for('mental_health_report') }}">Mental Health Report</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1>Daily Routine Based Psychological Test</h1>
+            <div class="question-card">
+                <div class="page-number">
+                    Question 6 of 6 <!-- Update this dynamically as needed -->
+                </div>
+                <h2>Question 6</h2>
+                <p>How often do you feel stressed or overwhelmed?</p>
+                <form method="POST">
+                    <div class="options">
+                        <label><input type="radio" name="stress-level" value="almost-never" required> Almost Never</label>
+                        <label><input type="radio" name="stress-level" value="occasionally"> Occasionally</label>
+                        <label><input type="radio" name="stress-level" value="often"> Often</label>
+                        <label><input type="radio" name="stress-level" value="almost-always"> Almost Always</label>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

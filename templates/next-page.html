@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neuro-Well Analysis</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='next-page-styles.css') }}"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="logo">
+          <img
+            src="{{ url_for('static', filename='logo.jpg') }}"
+            alt="Neuro-Well Logo"
+          />
+          <span>NEURO-WELL</span>
+        </div>
+        <nav>
+          <ul>
+            <li class="active"><a href="#">Analysis</a></li>
+            <li>
+              <a href="{{ url_for('psychological_test') }}"
+                >Psychological Test</a
+              >
+            </li>
+            <li><a href="{{ url_for('stress_level') }}">Stress Level</a></li>
+            <li>
+              <a href="{{ url_for('mental_health_report') }}"
+                >Mental Health Report</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <h1>Analysis</h1>
+        <div class="sensor-Data">
+          <div class="data-card">
+            <h2>SpO2</h2>
+            <p id="spo2">N/A</p>
+          </div>
+          <div class="data-card">
+            <h2>HRV</h2>
+            <p id="hrv">N/A</p>
+          </div>
+          <div class="data-card">
+            <h2>GSR</h2>
+            <p id="gsr">N/A</p>
+          </div>
+          <div class="data-card">
+            <h2>Pulse Rate</h2>
+            <p id="bpm">N/A</p>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="pulseChart"></canvas>
+        </div>
+        <div class="controls">
+          <button id="startButton">Start</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let chart;
+      let isReading = false;
+      let readingInterval;
+
+      document.getElementById("startButton").addEventListener("click", () => {
+        if (!isReading) {
+          isReading = true;
+          document.getElementById("startButton").disabled = true; // Disable the Start button
+          document.getElementById("startButton").textContent = "Reading...";
+
+          // Start reading data
+          fetch("/start_reading", { method: "POST" })
+            .then((response) => response.json())
+            .then((data) => console.log(data.status));
+
+          // Update sensor data and chart every 2 seconds for 20 seconds
+          let elapsedTime = 0;
+          readingInterval = setInterval(() => {
+            updateSensorData();
+            updateChart();
+            elapsedTime += 2000; // Increment by 2 seconds
+
+            if (elapsedTime >= 25000) {
+              // Stop after 20 seconds
+              clearInterval(readingInterval);
+              isReading = false;
+
+              // Stop reading data
+              fetch("/stop_reading", { method: "POST" })
+                .then((response) => response.json())
+                .then((data) => console.log(data.status));
+
+              // Update the final values one last time
+              updateSensorData();
+
+              // Automatically redirect to the Psychological Test page
+              window.location.href = "{{ url_for('psychological_test') }}";
+            }
+          }, 2000);
+        }
+      });
+
+      function updateSensorData() {
+        fetch("/get_sensor_data")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("spo2").textContent =
+              data.spo2 !== "N/A" ? `${data.spo2.toFixed(1)} %` : "N/A";
+            document.getElementById("hrv").textContent =
+              data.hrv !== "N/A" ? `${data.hrv.toFixed(1)} ms` : "N/A";
+            document.getElementById("gsr").textContent =
+              data.gsr !== "N/A" ? `${data.gsr.toFixed(1)} µS` : "N/A";
+            document.getElementById("bpm").textContent =
+              data.bpm !== "N/A" ? `${data.bpm.toFixed(1)} bpm` : "N/A";
+          });
+      }
+
+      function updateChart() {
+        fetch("/get_chart_data")
+          .then((response) => response.json())
+          .then((data) => {
+            if (!chart) {
+              const ctx = document
+                .getElementById("pulseChart")
+                .getContext("2d");
+              chart = new Chart(ctx, {
+                type: "line",
+                data: {
+                  labels: data.timestamps,
+                  datasets: [
+                    {
+                      label: "Pulse Rate (bpm)",
+                      data: data.bpm,
+                      borderColor: "#007bff",
+                      fill: false,
+                    },
+                  ],
+                },
+                options: {
+                  scales: {
+                    x: { title: { display: true, text: "Time" } },
+                    y: { title: { display: true, text: "Pulse Rate (bpm)" } },
+                  },
+                },
+              });
+            } else {
+              chart.data.labels = data.timestamps;
+              chart.data.datasets[0].data = data.bpm;
+              chart.update();
+            }
+          });
+      }
+
+      // Initial update to display N/A values
+      updateSensorData();
+      updateChart();
+    </script>
+  </body>
+</html>

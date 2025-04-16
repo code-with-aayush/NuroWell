@@ -1,0 +1,189 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f5f7fa;
+  color: #333;
+}
+
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #1a252f;
+  padding: 20px;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.logo span {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 15px 0;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #adb5bd;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+nav ul li a:hover,
+nav ul li.active a {
+  color: #fff;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+h1 {
+  font-size: 24px;
+  color: #1a252f;
+  margin-bottom: 20px;
+}
+
+.report-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  text-align: left;
+  min-height: calc(100vh - 100px);
+}
+
+.user-details p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.generated-report h2 {
+  color: #1a252f;
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #28a745;
+}
+
+.report-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #444;
+  padding: 10px 0;
+}
+
+.report-content ol {
+  padding-left: 20px;
+  list-style-type: decimal; /* Use numbers for conclusion */
+}
+
+.report-content ol li {
+  margin: 8px 0;
+  padding-left: 5px;
+}
+
+.report-content ul {
+  padding-left: 20px;
+  list-style-type: none; /* Remove default bullets */
+}
+
+.report-content ul li {
+  margin: 15px 0; /* Increased margin for new line separation */
+  padding-left: 15px;
+  position: relative;
+}
+
+.report-content ul li:before {
+  content: "•"; /* Custom bullet */
+  color: #28a745; /* Teal color for bullets */
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Style for Recommendations and Precautions subheadings */
+.report-content ul ul {
+  padding-left: 20px;
+}
+
+.report-content ul ul li {
+  margin: 15px 0; /* Increased margin for new line separation */
+  padding-left: 15px;
+  position: relative;
+}
+
+.report-content ul ul li:before {
+  content: "›"; /* Different bullet for sub-items */
+  color: #dc3545; /* Red color for sub-bullets */
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.download-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #dc3545;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background 0.3s;
+}
+
+.download-button:hover {
+  background: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .report-card {
+    max-width: 100%;
+    min-height: auto;
+  }
+}
